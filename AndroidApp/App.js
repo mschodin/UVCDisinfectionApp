@@ -1,25 +1,75 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import React, { useState } from "react";
+import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-      <Button 
-        title="Test Button"
-        color="#841584"
-      />
-    </View>
-  );
+    const [v, setVar] = useState("00:00");
+    const [count, setCount] = useState(0);
+    function handlePress() {
+        setCount(5);
+    }
+    return (
+        <View style={styles.container}>
+            <View style={styles.timebox}>
+                <Text
+                    style={styles.timeboxText}>
+                    {v}
+                </Text>
+            </View>
+            <View style={styles.timebox}>
+                <Text
+                    style={styles.timeboxText}>
+                    0 in
+                </Text>
+            </View>
+            <TouchableOpacity
+                style={styles.circleButton}
+                onPress={handlePress}
+            >
+                <Text style={styles.buttonText}>
+                    Start/Stop
+                </Text>
+            </TouchableOpacity>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#1a1a1a',
+        alignItems: 'center',
+    },
+    circleButton: {
+        borderWidth: 1,
+        borderColor: '#e6e6e6',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: "15vh",
+        height: "15vh",
+        marginTop: "40vh",
+        backgroundColor: '#ccf5ff',
+        borderRadius: "15vh",
+    },
+    buttonText: {
+        color: "#000000",
+        fontSize: "1.5vh",
+        // fontFamily: "Roboto",
+    },
+    timebox: {
+        backgroundColor: "#600080",
+        width: '60vw',
+        height: '10vh',
+        justifyContent: 'center',
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        marginTop: '10vh',
+        alignItems: 'center',
+        borderRadius: '20px',
+    },
+    timeboxText: {
+        // fontFamily: 'Roboto',
+        color: 'white',
+        fontSize: '5vh',
+        fontWeight: 'bold',
+    },
 });
