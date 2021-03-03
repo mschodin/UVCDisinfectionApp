@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
 
 export default function App() {
-    const [v, setVar] = useState("00:00");
-    const [count, setCount] = useState(0);
+    // const [v, setVar] = useState("00:00");
+    // const [count, setCount] = useState(0);
     function handlePress() {
-        setCount(5);
+        // setCount(5);
     }
     return (
         <View style={styles.container}>
             <View style={styles.timebox}>
                 <Text
                     style={styles.timeboxText}>
-                    {v}
+                    00:00
                 </Text>
             </View>
             <View style={styles.timebox}>
@@ -44,32 +44,32 @@ const styles = StyleSheet.create({
         borderColor: '#e6e6e6',
         alignItems: 'center',
         justifyContent: 'center',
-        width: "15vh",
-        height: "15vh",
-        marginTop: "40vh",
+        width: 100,
+        height: 100,
+        marginTop: "70%",
         backgroundColor: '#ccf5ff',
-        borderRadius: "15vh",
+        borderRadius: 50,
     },
     buttonText: {
         color: "#000000",
-        fontSize: "1.5vh",
+        fontSize: 20,
         // fontFamily: "Roboto",
     },
     timebox: {
         backgroundColor: "#600080",
-        width: '60vw',
-        height: '10vh',
+        width: '60%',
+        height: '10%',
         justifyContent: 'center',
         marginRight: 'auto',
         marginLeft: 'auto',
-        marginTop: '10vh',
+        marginTop: '25%',
         alignItems: 'center',
-        borderRadius: '20px',
+        borderRadius: 20,
     },
     timeboxText: {
         // fontFamily: 'Roboto',
         color: 'white',
-        fontSize: '5vh',
+        fontSize: 40,
         fontWeight: 'bold',
     },
 });
