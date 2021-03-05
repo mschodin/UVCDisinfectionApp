@@ -8,7 +8,7 @@ class Connect extends React.Component {
         super();
         this.manager = new BleManager();
         this.state({
-            nameOfDevice = 'unassigned'
+            nameOfDevice: 'unassigned'
         });
     }
 
@@ -27,7 +27,7 @@ class Connect extends React.Component {
                 return
             }
             console.log(device.name);
-            this.setState({nameOfDevice = device.name});
+            this.setState({nameOfDevice: device.name});
             if (device.name === 'some tag') {
                 this.manager.stopDeviceScan();
             }
