@@ -1,7 +1,52 @@
 import React, { useState } from "react";
 import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
+import { BleManager } from "react-native-ble-plx";
 
 class Control extends React.Component {
+
+    constructor(){
+        super();
+        this.manager = new BleManager();
+        this.state = {
+            nameOfDevice: 'unassigned',
+            isConnected: 'Not Connected'
+        };
+        this.mountedMethod();
+    }
+
+    mountedMethod() {
+        console.log("in mounted");
+        const subscription = this.manager.onStateChange((state) => {
+            if (state === 'PoweredOn') {
+                this.scanAndConnect();
+                subscription.remove();
+            }
+        }, true);
+    }
+
+    scanAndConnect() {
+        this.manager.startDeviceScan(null, null, (error, device) => {
+            if(error){
+                return
+            }
+            this.setState({nameOfDevice: device.name});
+            if (device.name === 'some tag') {
+                this.setState({isConnected: 'Connected'});
+                this.manager.stopDeviceScan();
+
+                device.connect()
+                    .then((device) => {
+                        return device.discoverAllServicesAndCharacteristics()
+                    })
+                    .then((device) => {
+                        // Do work on device with services and characteristics
+                    })
+                    .then((error) => {
+                        // Handle Errors
+                    });
+            }
+        });
+    }
 
     handlePress = () => {
 
@@ -20,6 +65,12 @@ class Control extends React.Component {
                     <Text
                         style={styles.timeboxText}>
                         0 in
+                    </Text>
+                </View>
+                <View style={styles.timebox}>
+                    <Text
+                        style={styles.timeboxText}>
+                        Status: {isConnected}
                     </Text>
                 </View>
                 <TouchableOpacity

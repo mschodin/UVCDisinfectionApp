@@ -13,8 +13,8 @@ export default function App() {
 
 
     return (
-        // <Control/>
-        <Connect/>
+        <Control/>
+        // <Connect/>
     );
 }
 
