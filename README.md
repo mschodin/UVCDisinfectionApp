@@ -1,7 +1,7 @@
 # UVCDisinfectionApp
 
 ## To install development environment follow the instructions below:
-Clone the project \n
+Clone the project  
 run 'npm install'
 run 'npm install -g expo-cli'
 run 'expo build:android' select yes when warned about building with native modules
