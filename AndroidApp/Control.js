@@ -13,7 +13,7 @@ class Control extends React.Component {
                 <View style={styles.timebox}>
                     <Text
                         style={styles.timeboxText}>
-                        00:00
+                        00:01
                     </Text>
                 </View>
                 <View style={styles.timebox}>

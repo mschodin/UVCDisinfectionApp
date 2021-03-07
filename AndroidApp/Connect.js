@@ -7,12 +7,14 @@ class Connect extends React.Component {
     constructor(){
         super();
         this.manager = new BleManager();
-        this.state({
+        this.state = {
             nameOfDevice: 'unassigned'
-        });
+        };
+        this.mountedMethod();
     }
 
-    componentWillMount() {
+    mountedMethod() {
+        console.log("in mounted");
         const subscription = this.manager.onStateChange((state) => {
             if (state === 'PoweredOn') {
                 this.scanAndConnect();
@@ -26,7 +28,6 @@ class Connect extends React.Component {
             if(error){
                 return
             }
-            console.log(device.name);
             this.setState({nameOfDevice: device.name});
             if (device.name === 'some tag') {
                 this.manager.stopDeviceScan();
@@ -36,9 +37,9 @@ class Connect extends React.Component {
 
     render () {
         return (
-            <div>
+            <Text>
                 {this.state.nameOfDevice}
-            </div>
+            </Text>
         );
     }
 }
