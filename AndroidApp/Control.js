@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
 
 class Control extends React.Component {
+
+    handlePress = () => {
+
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -19,7 +24,7 @@ class Control extends React.Component {
                 </View>
                 <TouchableOpacity
                     style={styles.circleButton}
-                    onPress={handlePress}
+                    onPress={this.handlePress}
                 >
                     <Text style={styles.buttonText}>
                         Start/Stop
