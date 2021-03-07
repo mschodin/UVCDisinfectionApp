@@ -69,8 +69,8 @@ class Control extends React.Component {
                 </View>
                 <View style={styles.timebox}>
                     <Text
-                        style={styles.timeboxText}>
-                        Status: {isConnected}
+                        style={styles.connectedText}>
+                        Status: {this.state.isConnected}
                     </Text>
                 </View>
                 <TouchableOpacity
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 100,
         height: 100,
-        marginTop: "70%",
+        marginTop: "20%",
         backgroundColor: '#ccf5ff',
         borderRadius: 50,
     },
@@ -123,6 +123,12 @@ const styles = StyleSheet.create({
         // fontFamily: 'Roboto',
         color: 'white',
         fontSize: 40,
+        fontWeight: 'bold',
+    },
+    connectedText: {
+        // fontFamily: 'Roboto',
+        color: 'white',
+        fontSize: 20,
         fontWeight: 'bold',
     },
 });
