@@ -10,11 +10,11 @@ run 'npm install -g react-native-cli'
 run 'npm install react-native-ble-plx --save'  
 run 'react-native link react-native-ble-plx'  
 Check the AndroidApp/android/build.gradle and get the minSdkVersion  
-In AndroidApp/android/src/main/AndroidManifest.xml paste the following:  
-"<uses-permission android:name="android.permission.BLUETOOTH"/>"  
-<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>  
-<uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION"/>  
-<uses-sdk android:minSdkVersion="USE MIN SDK VERSION FOUND ABOVE"/>  
+In AndroidApp/android/src/main/AndroidManifest.xml paste the following in aligator brackts </>:  
+uses-permission android:name="android.permission.BLUETOOTH"  
+uses-permission android:name="android.permission.BLUETOOTH_ADMIN"  
+uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION"  
+uses-sdk android:minSdkVersion="USE MIN SDK VERSION FOUND ABOVE"  
 Plug in android phone and enable developer options  
 From project directory run 'react-native run-android'  
   
