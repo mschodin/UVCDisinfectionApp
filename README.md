@@ -20,5 +20,5 @@ Locate the AppData/Local/Android/Sdk/platform-tools/ directory, in that director
 From project directory run 'react-native run-android'  
   
 Notes:  
-You may need to add abd.exe to path, if you see 'adb is not a command'  
+You may need to add abd.exe to path, if you see 'adb is not a command' do this by adding 'C:\Users\username\AppData\Local\Android\Sdk\platform-tools' to Path, then close all programs, then test it by typing 'adb devices' in terminal or bash.  
 You may need to create a file called 'local.properties' in the /android directory and add 'sdk.dir=C:\\Users\\Username\\AppData\\Local\\Android\\Sdk' if given error 'sdk location not found'  
