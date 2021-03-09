@@ -1,86 +1,312 @@
 import React, { useState } from "react";
-import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
-import { BleManager } from "react-native-ble-plx";
+import { StyleSheet, Text, View, Button, TouchableOpacity, TouchableHighlight } from 'react-native';
+import BluetoothSerial from 'react-native-bluetooth-serial';
+
+const DeviceList = ({ devices, connectedId, showConnectedIcon, onDevicePress }) =>
+    <View>
+        <Text style={{fontSize: 40, color: '#FFFFFF', fontWeight: 'bold', paddingBottom: 20,}}>
+            Connect To HC-05
+        </Text>
+        <View style={styles.listContainer}> 
+            {devices.map((device, i) => {
+                return (
+                    <TouchableHighlight
+                        underlayColor='#000000'
+                        key={`${device.id}_${i}`}
+                        style={styles.listItem} onPress={() => onDevicePress(device)}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={{ fontWeight: 'bold', color: '#FFFFFF', }}>{device.name}</Text>
+                                <Text style={{ color: '#FFFFFF', }}>{`<${device.id}>`}</Text>
+                            </View>
+                        </View>
+                    </TouchableHighlight>
+                )
+            })}
+        </View>
+    </View>
+
 
 class Control extends React.Component {
 
-    constructor(){
+    constructor() {
         super();
-        this.manager = new BleManager();
         this.state = {
             nameOfDevice: 'unassigned',
-            isConnected: 'Not Connected'
+            isConnected: 'Not Connected',
+            lastWrite: 'z',
+
+            isEnabled: false,
+            discovering: false,
+            devices: [],
+            unpairedDevices: [],
+            connected: false,
+            section: 0
         };
-        this.mountedMethod();
     }
 
-    mountedMethod() {
-        console.log("in mounted");
-        const subscription = this.manager.onStateChange((state) => {
-            if (state === 'PoweredOn') {
-                this.scanAndConnect();
-                subscription.remove();
+    componentDidMount() {
+        Promise.all([
+            BluetoothSerial.isEnabled(),
+            BluetoothSerial.list()
+        ])
+            .then((values) => {
+                const [isEnabled, devices] = values
+                this.setState({ isEnabled, devices })
+            });
+
+        BluetoothSerial.on('bluetoothEnabled', () => console.log('Bluetooth enabled'))
+        BluetoothSerial.on('bluetoothDisabled', () => console.log('Bluetooth disabled'))
+        BluetoothSerial.on('error', (err) => console.log(`Error: ${err.message}`))
+        BluetoothSerial.on('connectionLost', () => {
+            if (this.state.device) {
+                console.log(`Connection to device ${this.state.device.name} has been lost`)
             }
-        }, true);
+            this.setState({ connected: false })
+        })
     }
 
-    scanAndConnect() {
-        this.manager.startDeviceScan(null, null, (error, device) => {
-            if(error){
-                return
-            }
-            this.setState({nameOfDevice: device.name});
-            if (device.name === 'some tag') {
-                this.setState({isConnected: 'Connected'});
-                this.manager.stopDeviceScan();
 
-                device.connect()
-                    .then((device) => {
-                        return device.discoverAllServicesAndCharacteristics()
-                    })
-                    .then((device) => {
-                        // Do work on device with services and characteristics
-                    })
-                    .then((error) => {
-                        // Handle Errors
-                    });
-            }
-        });
+    /**
+     * [android]
+     * request enable of bluetooth from user
+     */
+    requestEnable() {
+        BluetoothSerial.requestEnable()
+            .then((res) => this.setState({ isEnabled: true }))
+            .catch((err) => console.log(err.message))
     }
+
+    /**
+     * [android]
+     * enable bluetooth on device
+     */
+    enable() {
+        BluetoothSerial.enable()
+            .then((res) => this.setState({ isEnabled: true }))
+            .catch((err) => console.log(err.message))
+    }
+
+    /**
+     * [android]
+     * disable bluetooth on device
+     */
+    disable() {
+        BluetoothSerial.disable()
+            .then((res) => this.setState({ isEnabled: false }))
+            .catch((err) => console.log(err.message))
+    }
+
+    /**
+     * [android]
+     * toggle bluetooth
+     */
+    toggleBluetooth(value) {
+        if (value === true) {
+            this.enable()
+        } else {
+            this.disable()
+        }
+    }
+
+    /**
+     * [android]
+     * Discover unpaired devices, works only in android
+     */
+    discoverUnpaired() {
+        if (this.state.discovering) {
+            return false
+        } else {
+            this.setState({ discovering: true })
+            BluetoothSerial.discoverUnpairedDevices()
+                .then((unpairedDevices) => {
+                    this.setState({ unpairedDevices, discovering: false })
+                })
+                .catch((err) => console.log(err.message))
+        }
+    }
+
+    /**
+     * [android]
+     * Discover unpaired devices, works only in android
+     */
+    cancelDiscovery() {
+        if (this.state.discovering) {
+            BluetoothSerial.cancelDiscovery()
+                .then(() => {
+                    this.setState({ discovering: false })
+                })
+                .catch((err) => console.log(err.message))
+        }
+    }
+
+    /**
+     * [android]
+     * Pair device
+     */
+    pairDevice(device) {
+        BluetoothSerial.pairDevice(device.id)
+            .then((paired) => {
+                if (paired) {
+                    console.log(`Device ${device.name} paired successfully`)
+                    const devices = this.state.devices
+                    devices.push(device)
+                    this.setState({ devices, unpairedDevices: this.state.unpairedDevices.filter((d) => d.id !== device.id) })
+                } else {
+                    console.log(`Device ${device.name} pairing failed`)
+                }
+            })
+            .catch((err) => console.log(err.message))
+    }
+
+    /**
+     * Connect to bluetooth device by id
+     * @param  {Object} device
+     */
+    connect(device) {
+        this.setState({ connecting: true })
+        BluetoothSerial.connect(device.id)
+            .then((res) => {
+                console.log(`Connected to device ${device.name}`)
+                this.setState({ device, connected: true, connecting: false })
+            })
+            .catch((err) => console.log(err.message))
+    }
+
+    /**
+     * Disconnect from bluetooth device
+     */
+    disconnect() {
+        BluetoothSerial.disconnect()
+            .then(() => this.setState({ connected: false }))
+            .catch((err) => console.log(err.message))
+    }
+
+    /**
+     * Toggle connection when we have active device
+     * @param  {Boolean} value
+     */
+    toggleConnect(value) {
+        if (value === true && this.state.device) {
+            this.connect(this.state.device)
+        } else {
+            this.disconnect()
+        }
+    }
+
+    /**
+     * Write message to device
+     * @param  {String} message
+     */
+    write(message) {
+        if (!this.state.connected) {
+            console.log('You must connect to device first')
+        }
+
+        BluetoothSerial.write(message)
+            .then((res) => {
+                console.log('Successfuly wrote to device')
+                this.setState({ connected: true })
+            })
+            .catch((err) => console.log(err.message))
+    }
+
+    onDevicePress(device) {
+        if (this.state.section === 0) {
+            this.connect(device)
+        } else {
+            this.pairDevice(device)
+        }
+    }
+
+    writePackets(message, packetSize = 64) {
+        const toWrite = iconv.encode(message, 'cp852')
+        const writePromises = []
+        const packetCount = Math.ceil(toWrite.length / packetSize)
+
+        for (var i = 0; i < packetCount; i++) {
+            const packet = new Buffer(packetSize)
+            packet.fill(' ')
+            toWrite.copy(packet, 0, i * packetSize, (i + 1) * packetSize)
+            writePromises.push(BluetoothSerial.write(packet))
+        }
+
+        Promise.all(writePromises)
+            .then((result) => {
+            })
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     handlePress = () => {
-
+        console.log("Pressed");
+        if (this.state.lastWrite === 'z') {
+            this.write('Z');
+            this.setState({ lastWrite: 'Z' });
+        } else {
+            this.write('z');
+            this.setState({ lastWrite: 'z' });
+        }
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.timebox}>
-                    <Text
-                        style={styles.timeboxText}>
-                        00:01
-                    </Text>
-                </View>
-                <View style={styles.timebox}>
-                    <Text
-                        style={styles.timeboxText}>
-                        0 in
-                    </Text>
-                </View>
-                <View style={styles.timebox}>
-                    <Text
-                        style={styles.timeboxText}>
-                        Status: {isConnected}
-                    </Text>
-                </View>
-                <TouchableOpacity
-                    style={styles.circleButton}
-                    onPress={this.handlePress}
-                >
-                    <Text style={styles.buttonText}>
-                        Start/Stop
-                    </Text>
-                </TouchableOpacity>
+                {this.state.connected === false ? (
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                        <DeviceList
+                            showConnectedIcon={this.state.section === 0}
+                            connectedId={this.state.device && this.state.device.id}
+                            devices={this.state.section === 0 ? this.state.devices : this.state.unpairedDevices}
+                            onDevicePress={(device) => this.onDevicePress(device)} />
+                    </View>
+                ) : (
+                    <View style={styles.container}>
+                        <View style={styles.timebox}>
+                            <Text
+                                style={styles.timeboxText}>
+                                00:01
+                            </Text>
+                        </View>
+                        <View style={styles.timebox}>
+                            <Text
+                                style={styles.timeboxText}>
+                                0 in
+                            </Text>
+                        </View>
+                        <View style={styles.timebox}>
+                            <Text
+                                style={styles.statusText}>
+                                Status: {this.state.isConnected}
+                            </Text>
+                        </View>
+                        <TouchableOpacity
+                            style={styles.circleButton}
+                            onPress={this.handlePress}
+                        >
+                            <Text style={styles.buttonText}>
+                                Start/Stop
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
             </View>
         );
     }
@@ -91,6 +317,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#1a1a1a',
         alignItems: 'center',
+        width: '100%',
+        height: '100%',
     },
     circleButton: {
         borderWidth: 1,
@@ -99,7 +327,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 100,
         height: 100,
-        marginTop: "70%",
+        marginTop: "20%",
         backgroundColor: '#ccf5ff',
         borderRadius: 50,
     },
@@ -124,6 +352,24 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 40,
         fontWeight: 'bold',
+    },
+    statusText: {
+        // fontFamily: 'Roboto',
+        color: 'white',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    listContainer: {
+        borderColor: '#ccc',
+        borderTopWidth: 0.5,
+    },
+    listItem: {
+        // flex: 1,
+        height: 48,
+        paddingHorizontal: 16,
+        borderColor: '#ccc',
+        borderBottomWidth: 0.5,
+        justifyContent: 'center'
     },
 });
 
