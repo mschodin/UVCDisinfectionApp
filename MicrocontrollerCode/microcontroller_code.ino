@@ -2,11 +2,13 @@
 
 // Declare Variables
 char inputByte;
-double distance = 0.0;
+double distance = 0.0; // in cm
 double max_boundary = 0.0;
 double min_boundary = 0.0;
 int runtime = 0;
 bool is_running = false;
+const int pwPin1 = 3; //this may be different depending on the Arduino being used, and the other PW pins being used.
+long sensor1, inches;
 
 // Constant variables
 const double max_start_distance = 10;
@@ -15,6 +17,7 @@ const double min_start_distance = 1;
 
 void setup() {
  Serial.begin(9600);
+ pinMode(pwPin1, INPUT);
  pinMode(13,OUTPUT);
 }
 
@@ -71,20 +74,29 @@ void run_cycle() {
 
 // Gets distance from proximity sensor
 void calculate_distance() {
-  // TODO: Implement this function properly
-  distance = 2;
+  sensor1 = pulseIn(pwPin1, HIGH);
+  cm = sensor1/10 // converts the range to cm
+  inches = cm/2.54 // converts the range to inches
+  distance = cm;
 }
 
 // Determines the max and min error boundary based on distance
 void calculate_boundary(){
-  // TODO: Implement this function properly
-  max_boundary = 3;
-  min_boundary = 1;
+  double tempDist = distance / sqrt(2);
+  if(tempDist + 1 > distance){
+    min_boundary = 1;
+  } else {
+    min_boundary = distance - (distance / sqrt(2));
+  }
+  max_boundary = distance + (distance / sqrt(2));
+  
 }
 
 void calculate_runtime() {
-  // TODO: Implement this function properly
-  runtime = 5;
+  int base_dist = 1;
+  int base_intensity = 3000; // milliWatts
+  int new_intensity = (cm / base_dist) * base_intensity;
+  runtime = 5 / new_intensity;
 }
 
 // Checks for validity of distance
