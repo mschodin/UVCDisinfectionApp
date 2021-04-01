@@ -39,7 +39,6 @@ void run_cycle() {
   calculate_runtime();
   
   // Send runtime, starting boolean, distance,
-  // TODO: max boundary, min boundary to app
   Serial.println("isRunning: true");
   Serial.print("runtime: ");
   char rtime[16];
@@ -62,6 +61,8 @@ void run_cycle() {
     // TODO: Comment this back in once it is working
     //check_distance();
     
+	// TODO call calculate percent and send to app
+	
     delay(1000);
     runtime = runtime - 1;
     Serial.print("runtime: ");
@@ -125,15 +126,6 @@ void calculate_boundary(){
 void calculate_percent() {
 //     int base = max_boundary - min_boundary;
     percent = ((distance - min_boundary) / (max_boundary - min_boundary)) * 100;
-}
-
-// TODO: Method to display percentage as bar
-void display_percent() {
-   if(percent > 100 || percent < 0){
-     // TODO: show message that user is outside of range
-   } else {
-     // TODO: display percentage as a bar
-   }
 }
 
 void calculate_runtime() {
