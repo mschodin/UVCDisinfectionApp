@@ -303,11 +303,6 @@ class Control extends React.Component {
         }
     }
 
-    checkUpdates = () => {
-        console.log("------------------------");
-        // this.disconnect();
-    }
-
     render() {
         return (
             <View style={styles.container}>
@@ -333,6 +328,12 @@ class Control extends React.Component {
                                 {this.state.distance} cm
                             </Text>
                         </View>
+                        <View style={styles.timebox}>
+                            <Text
+                                style={styles.timeboxText}>
+                                {this.state.isRunning}
+                            </Text>
+                        </View>
                         {/* <View style={styles.timebox}>
                             <Text
                                 style={styles.statusText}>
@@ -345,14 +346,6 @@ class Control extends React.Component {
                         >
                             <Text style={styles.buttonText}>
                                 Start/Stop
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.circleButton}
-                            onPress={this.checkUpdates}
-                        >
-                            <Text style={styles.buttonText}>
-                                Check updates
                             </Text>
                         </TouchableOpacity>
                     </View>

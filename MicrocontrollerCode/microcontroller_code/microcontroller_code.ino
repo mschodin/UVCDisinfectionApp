@@ -57,20 +57,38 @@ void run_cycle() {
     // TODO: implement logic to read input byte and check for cancel cycle
     
     calculate_distance();
-    // TODO: Send distance to app
-    check_distance();
+
+    // TODO: Comment this back in once it is working
+    //check_distance();
+    
     delay(1000);
-    runtime--;
+    runtime = runtime - 1;
+    Serial.print("runtime: ");
+    rtime[16];
+    itoa(runtime, rtime, 10);
+    Serial.println(rtime);
+    Serial.print("distance: ");
+    dist[16];
+    itoa(runtime, dist, 10);
+    Serial.println(dist);
   }
 
   // TODO: Turn off LEDs, digital write 13 low is for example, this is where we implement LED driver logic
   digitalWrite(13,LOW);
 
-  Serial.write("finished\n");
   distance = 0.0;
   max_boundary = 0.0;
   min_boundary = 0.0;
   runtime = 0;
+  Serial.println("isRunning: false");
+  Serial.print("runtime: ");
+  rtime[16];
+  itoa(runtime, rtime, 10);
+  Serial.println(rtime);
+  Serial.print("distance: ");
+  dist[16];
+  itoa(runtime, dist, 10);
+  Serial.println(dist);
   is_running = false;
   loop();
 }
@@ -99,6 +117,10 @@ void calculate_runtime() {
   int base_intensity = 300;
   int new_intensity = distance/base_dist;
   runtime = 5/new_intensity;
+  // TODO: remove this once distance and runtime are working properly
+  if(runtime <= 0){
+    runtime = 3;
+  }
 }
 
 // Checks for validity of distance
