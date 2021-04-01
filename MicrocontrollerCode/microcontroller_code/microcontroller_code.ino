@@ -43,6 +43,7 @@ void run_cycle() {
   check_distance();
   calculate_runtime();
   // TODO: Send runtime, starting boolean, distance, max boundary, min boundary to app
+  Serial.write("running\n");
   is_running = true;
 
   // TODO: Turn on LEDs, digital write 13 high is for example, this is where we implement LED driver logic
@@ -61,6 +62,7 @@ void run_cycle() {
   // TODO: Turn off LEDs, digital write 13 low is for example, this is where we implement LED driver logic
   digitalWrite(13,LOW);
 
+  Serial.write("finished\n");
   distance = 0.0;
   max_boundary = 0.0;
   min_boundary = 0.0;
@@ -84,7 +86,7 @@ void calculate_boundary(){
 
 void calculate_runtime() {
   // TODO: Implement this function properly
-  runtime = 5;
+  runtime = 3;
 }
 
 // Checks for validity of distance

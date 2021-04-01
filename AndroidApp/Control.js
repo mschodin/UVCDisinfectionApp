@@ -34,14 +34,16 @@ class Control extends React.Component {
         this.state = {
             nameOfDevice: 'unassigned',
             isConnected: 'Not Connected',
-            lastWrite: 'z',
+            lastWrite: 's',
 
             isEnabled: false,
             discovering: false,
             devices: [],
             unpairedDevices: [],
             connected: false,
-            section: 0
+            section: 0,
+
+            msg: ""
         };
     }
 
@@ -64,6 +66,31 @@ class Control extends React.Component {
             }
             this.setState({ connected: false })
         })
+
+        // BluetoothSerial.withDelimiter('\n').then(() => {
+        //     Promise.all([
+        //         BluetoothSerial.isEnabled(),
+        //         BluetoothSerial.list(),
+        //     ]).then(values => {
+        //         const [isEnabled, devices] = values;
+        //         this.setState({devices});
+        //     });
+        //     ])
+        // })
+        BluetoothSerial.withDelimiter('\n').then(() => {
+            Promise.all([
+                BluetoothSerial.isEnabled(),
+                BluetoothSerial.list(),
+            ]).then(values => {
+                const [isEnabled, devices] = values;
+                this.setState({ devices });
+            });
+            BluetoothSerial.on('read', data => {
+                this.setState({msg: data.data})
+                console.log("MESSAGE READ");
+                console.log(this.state.msg);
+            });
+        });
     }
 
 
@@ -211,6 +238,10 @@ class Control extends React.Component {
             .catch((err) => console.log(err.message))
     }
 
+    // read(){
+    //     BluetoothSerial.read();
+    // }
+
     onDevicePress(device) {
         if (this.state.section === 0) {
             this.connect(device)
@@ -257,13 +288,17 @@ class Control extends React.Component {
 
     handlePress = () => {
         console.log("Pressed");
-        if (this.state.lastWrite === 'z') {
-            this.write('Z');
-            this.setState({ lastWrite: 'Z' });
+        if (this.state.lastWrite === 's') {
+            this.write('S');
+            this.setState({ lastWrite: 'S' });
         } else {
-            this.write('z');
-            this.setState({ lastWrite: 'z' });
+            this.write('s');
+            this.setState({ lastWrite: 's' });
         }
+    }
+
+    checkUpdates = () => {
+        console.log("------------------------");
     }
 
     render() {
@@ -291,18 +326,26 @@ class Control extends React.Component {
                                 0 in
                             </Text>
                         </View>
-                        <View style={styles.timebox}>
+                        {/* <View style={styles.timebox}>
                             <Text
                                 style={styles.statusText}>
                                 Status: {this.state.isConnected}
                             </Text>
-                        </View>
+                        </View> */}
                         <TouchableOpacity
                             style={styles.circleButton}
                             onPress={this.handlePress}
                         >
                             <Text style={styles.buttonText}>
                                 Start/Stop
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.circleButton}
+                            onPress={this.checkUpdates}
+                        >
+                            <Text style={styles.buttonText}>
+                                Check updates
                             </Text>
                         </TouchableOpacity>
                     </View>
