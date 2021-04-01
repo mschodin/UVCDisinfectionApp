@@ -43,7 +43,10 @@ class Control extends React.Component {
             connected: false,
             section: 0,
 
-            msg: ""
+            msg: "",
+            isRunning: false,
+            runtime: 0,
+            distance: 0,
         };
     }
 
@@ -67,16 +70,6 @@ class Control extends React.Component {
             this.setState({ connected: false })
         })
 
-        // BluetoothSerial.withDelimiter('\n').then(() => {
-        //     Promise.all([
-        //         BluetoothSerial.isEnabled(),
-        //         BluetoothSerial.list(),
-        //     ]).then(values => {
-        //         const [isEnabled, devices] = values;
-        //         this.setState({devices});
-        //     });
-        //     ])
-        // })
         BluetoothSerial.withDelimiter('\n').then(() => {
             Promise.all([
                 BluetoothSerial.isEnabled(),
@@ -86,9 +79,16 @@ class Control extends React.Component {
                 this.setState({ devices });
             });
             BluetoothSerial.on('read', data => {
-                this.setState({msg: data.data})
-                console.log("MESSAGE READ");
-                console.log(this.state.msg);
+                // this.setState({msg: data.data})
+                // console.log("MESSAGE READ");
+                // console.log(this.state.msg);
+                
+                var info = data.data.split(" ");
+                if(info[0] === "isRunning:"){
+                    console.log(info[1]);
+                } else if (info[0] === "runtime:"){
+                    console.log(info[1]);
+                }
             });
         });
     }
@@ -238,10 +238,6 @@ class Control extends React.Component {
             .catch((err) => console.log(err.message))
     }
 
-    // read(){
-    //     BluetoothSerial.read();
-    // }
-
     onDevicePress(device) {
         if (this.state.section === 0) {
             this.connect(device)
@@ -287,13 +283,18 @@ class Control extends React.Component {
 
 
     handlePress = () => {
-        console.log("Pressed");
-        if (this.state.lastWrite === 's') {
+        // console.log("Pressed");
+        // if (this.state.lastWrite === 's') {
+        //     this.write('S');
+        //     this.setState({ lastWrite: 'S' });
+        // } else {
+        //     this.write('s');
+        //     this.setState({ lastWrite: 's' });
+        // }
+        if (!this.state.isRunning) {
             this.write('S');
-            this.setState({ lastWrite: 'S' });
         } else {
             this.write('s');
-            this.setState({ lastWrite: 's' });
         }
     }
 
@@ -317,13 +318,13 @@ class Control extends React.Component {
                         <View style={styles.timebox}>
                             <Text
                                 style={styles.timeboxText}>
-                                00:01
+                                {this.state.runtime} seconds
                             </Text>
                         </View>
                         <View style={styles.timebox}>
                             <Text
                                 style={styles.timeboxText}>
-                                0 in
+                                {this.state.distance} cm
                             </Text>
                         </View>
                         {/* <View style={styles.timebox}>
