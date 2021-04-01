@@ -47,6 +47,7 @@ class Control extends React.Component {
             isRunning: false,
             runtime: 0,
             distance: 0,
+            status: "Not Running"
         };
     }
 
@@ -85,6 +86,15 @@ class Control extends React.Component {
                         this.setState({
                             isRunning: (info[1].includes("true"))
                         });
+                        if(this.state.isRunning){
+                            this.setState({
+                                status: 'Cycle Running'
+                            })
+                        } else {
+                            this.setState({
+                                status: 'Not Running'
+                            })
+                        }
                     } else if (info[0] === "runtime:"){
                         this.setState({
                             runtime: info[1].split("\n")
@@ -92,6 +102,20 @@ class Control extends React.Component {
                     } else if (info[0] === "distance:"){
                         this.setState({
                             distance: info[1].split("\n")
+                        })
+                    } else if (info[0] === "status:"){
+                        var eStatus = "";
+                        if(info[1].includes("startingtoofar")){
+                            eStatus = "Can't start cycle, device too far";
+                        } else if (info[1].includes("startingtoofar")){
+                            eStatus = "Can't start cycle, device too close";
+                        } else if (info[1].includes("runningtoofar")){
+                            eStatus = "Canceled cycle, device too far";
+                        } else if (info[1].includes(runningtooclose)){
+                            eStatus = "Canceled cycle, device too close";
+                        }
+                        this.setStatus({
+                            status: eStatus
                         })
                     }
                 }
@@ -330,8 +354,14 @@ class Control extends React.Component {
                         </View>
                         <View style={styles.timebox}>
                             <Text
+                                style={styles.statusText}>
+                                {this.state.status}
+                            </Text>
+                        </View>
+                        <View style={styles.timebox}>
+                            <Text
                                 style={styles.timeboxText}>
-                                {this.state.isRunning}
+                                bar here
                             </Text>
                         </View>
                         {/* <View style={styles.timebox}>
@@ -386,7 +416,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginRight: 'auto',
         marginLeft: 'auto',
-        marginTop: '25%',
+        marginTop: '15%',
         alignItems: 'center',
         borderRadius: 20,
     },

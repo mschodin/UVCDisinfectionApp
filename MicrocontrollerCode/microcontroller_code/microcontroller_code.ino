@@ -127,9 +127,9 @@ void calculate_runtime() {
 void check_distance(){
   if(distance > max_start_distance || distance < min_start_distance){
     if(distance > max_start_distance){
-      // TODO: Send message to App that device is too far
+      Serial.println("status: startingtoofar");
     } else {
-      // TODO: Send message to App that device is too close
+      Serial.println("status: startingtooclose");
     }
     distance = 0.0;
     max_boundary = 0.0;
@@ -143,9 +143,9 @@ void check_distance(){
   } else if (is_running == true) {
     if(distance > max_boundary || distance < min_boundary){
       if(distance > max_boundary){
-        // TODO: Send message to App that device moved too far
+        Serial.println("status: runningtoofar");
       } else {
-        // TODO: Send message to App that device moved too close
+        Serial.println("status: runningtooclose");
       }
       digitalWrite(13,LOW);
       distance = 0.0;
@@ -153,7 +153,6 @@ void check_distance(){
       min_boundary = 0.0;
       runtime = 0;
       is_running = false;
-      // TODO: Send canceled info to app
       loop();
     }
   }
