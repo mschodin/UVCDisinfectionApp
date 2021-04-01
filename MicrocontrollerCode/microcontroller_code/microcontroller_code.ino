@@ -54,7 +54,7 @@ void run_cycle() {
   digitalWrite(13,HIGH);
 
   while(runtime > 0){
-    // TODO: implement logic to read input byte and check for cancel cycle
+    // TODO: change runtime to double and count down by 1/10 second
     
     calculate_distance();
 
@@ -71,6 +71,14 @@ void run_cycle() {
     dist[16];
     itoa(runtime, dist, 10);
     Serial.println(dist);
+
+    while(Serial.available()>0){
+      inputByte = Serial.read();
+      if(inputByte=='s'){
+        Serial.println("CANCELED");
+        runtime = 0;
+      }
+    }
   }
 
   // TODO: Turn off LEDs, digital write 13 low is for example, this is where we implement LED driver logic

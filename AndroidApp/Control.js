@@ -111,10 +111,10 @@ class Control extends React.Component {
                             eStatus = "Can't start cycle, device too close";
                         } else if (info[1].includes("runningtoofar")){
                             eStatus = "Canceled cycle, device too far";
-                        } else if (info[1].includes(runningtooclose)){
+                        } else if (info[1].includes("runningtooclose")){
                             eStatus = "Canceled cycle, device too close";
                         }
-                        this.setStatus({
+                        this.setState({
                             status: eStatus
                         })
                     }
