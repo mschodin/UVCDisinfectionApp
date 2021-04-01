@@ -8,6 +8,7 @@ double min_boundary = 0.0;
 int runtime = 0;
 bool is_running = false;
 long sensor1, inches;
+int percent;
 
 // Constant variables
 const double max_start_distance = 10;
@@ -110,6 +111,21 @@ void calculate_boundary(){
     min_boundary = distance - temp_dist;
   }
   max_boundary = distance + temp_dist;
+}
+
+// Method to show boundary as percentage
+void calculate_percent() {
+//     int base = max_boundary - min_boundary;
+    percent = ((distance - min_boundary) / (max_boundary - min_boundary)) * 100;
+}
+
+// TODO: Method to display percentage as bar
+void display_percent() {
+   if(percent > 100 || percent < 0){
+     // TODO: show message that user is outside of range
+   } else {
+     // TODO: display percentage as a bar
+   }
 }
 
 void calculate_runtime() {
