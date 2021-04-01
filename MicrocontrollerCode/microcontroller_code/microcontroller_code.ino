@@ -21,14 +21,6 @@ void setup() {
 // Device waits in idle until start cycle has been received
 void loop() {
   while(Serial.available()>0){
-    //inputByte= Serial.read();
-    //Serial.println(inputByte);
-    //if (inputByte=='Z'){
-    //  digitalWrite(13,HIGH);
-    //}
-    //else if (inputByte=='z'){
-    //  digitalWrite(13,LOW);
-    //}
     inputByte = Serial.read();
     if(inputByte=='S'){
       run_cycle(); 
@@ -43,10 +35,15 @@ void run_cycle() {
   check_distance();
   calculate_runtime();
   // TODO: Send runtime, starting boolean, distance, max boundary, min boundary to app
-  Serial.write("isRunning: true\n");
-  Serial.write("runtime: ");
-  Serial.write(runtime);
-  Serial.write("\n");
+  Serial.println("isRunning: true");
+  Serial.print("runtime: ");
+  char rtime[16];
+  itoa(runtime, rtime, 10);
+  Serial.println(rtime);
+  Serial.print("distance: ");
+  char dist[16];
+  itoa(runtime, dist, 10);
+  Serial.println(dist);
   is_running = true;
 
   // TODO: Turn on LEDs, digital write 13 high is for example, this is where we implement LED driver logic

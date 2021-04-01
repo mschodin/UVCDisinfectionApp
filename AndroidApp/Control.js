@@ -82,13 +82,22 @@ class Control extends React.Component {
                 // this.setState({msg: data.data})
                 // console.log("MESSAGE READ");
                 // console.log(this.state.msg);
-                
-                var info = data.data.split(" ");
-                if(info[0] === "isRunning:"){
-                    console.log(info[1]);
-                } else if (info[0] === "runtime:"){
-                    console.log(info[1]);
+                if(data.data != null && data.data != " "){
+                    var info = data.data.split(" ");
+                    if(info[0] === "isRunning:"){
+                        console.log(info[1].split("\n"));
+                        this.setState({
+                            isRunning: (info[1].split("\n") == "true")
+                        });
+                        console.log(this.state.isRunning);
+                    } else if (info[0] === "runtime:"){
+                        console.log(info[1].split("\n"));
+                        this.setState({
+                            runtime: info[1].split("\n")
+                        })
+                    }
                 }
+                
             });
         });
     }
@@ -239,6 +248,12 @@ class Control extends React.Component {
     }
 
     onDevicePress(device) {
+        if(BluetoothSerial.isConnected){
+            console.log("IS CONNECTED");
+            BluetoothSerial.disconnect()
+                .then(() => this.setState({ connected: false }))
+                .catch((err) => console.log(err.message))
+        }
         if (this.state.section === 0) {
             this.connect(device)
         } else {
@@ -283,14 +298,6 @@ class Control extends React.Component {
 
 
     handlePress = () => {
-        // console.log("Pressed");
-        // if (this.state.lastWrite === 's') {
-        //     this.write('S');
-        //     this.setState({ lastWrite: 'S' });
-        // } else {
-        //     this.write('s');
-        //     this.setState({ lastWrite: 's' });
-        // }
         if (!this.state.isRunning) {
             this.write('S');
         } else {
@@ -300,6 +307,7 @@ class Control extends React.Component {
 
     checkUpdates = () => {
         console.log("------------------------");
+        this.disconnect();
     }
 
     render() {

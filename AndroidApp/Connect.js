@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {StyleSheet, Text, View, Button, TouchableOpacity} from 'react-native';
-import { BleManager } from "react-native-ble-plx";
+// import { BleManager } from "react-native-ble-plx";
 
 class Connect extends React.Component {
 
