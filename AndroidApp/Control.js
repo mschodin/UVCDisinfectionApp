@@ -79,21 +79,19 @@ class Control extends React.Component {
                 this.setState({ devices });
             });
             BluetoothSerial.on('read', data => {
-                // this.setState({msg: data.data})
-                // console.log("MESSAGE READ");
-                // console.log(this.state.msg);
                 if(data.data != null && data.data != " "){
                     var info = data.data.split(" ");
                     if(info[0] === "isRunning:"){
-                        console.log(info[1].split("\n"));
                         this.setState({
-                            isRunning: (info[1].split("\n") == "true")
+                            isRunning: (info[1].includes("true"))
                         });
-                        console.log(this.state.isRunning);
                     } else if (info[0] === "runtime:"){
-                        console.log(info[1].split("\n"));
                         this.setState({
                             runtime: info[1].split("\n")
+                        })
+                    } else if (info[0] === "distance:"){
+                        this.setState({
+                            distance: info[1].split("\n")
                         })
                     }
                 }
@@ -307,7 +305,7 @@ class Control extends React.Component {
 
     checkUpdates = () => {
         console.log("------------------------");
-        this.disconnect();
+        // this.disconnect();
     }
 
     render() {

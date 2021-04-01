@@ -7,6 +7,7 @@ double max_boundary = 0.0;
 double min_boundary = 0.0;
 int runtime = 0;
 bool is_running = false;
+long sensor1, inches;
 
 // Constant variables
 const double max_start_distance = 10;
@@ -16,6 +17,7 @@ const double min_start_distance = 1;
 void setup() {
  Serial.begin(9600);
  pinMode(13,OUTPUT);
+ pinMode(3,INPUT);
 }
 
 // Device waits in idle until start cycle has been received
@@ -34,7 +36,9 @@ void run_cycle() {
   calculate_boundary();
   check_distance();
   calculate_runtime();
-  // TODO: Send runtime, starting boolean, distance, max boundary, min boundary to app
+  
+  // Send runtime, starting boolean, distance,
+  // TODO: max boundary, min boundary to app
   Serial.println("isRunning: true");
   Serial.print("runtime: ");
   char rtime[16];
@@ -73,20 +77,28 @@ void run_cycle() {
 
 // Gets distance from proximity sensor
 void calculate_distance() {
-  // TODO: Implement this function properly
-  distance = 2;
+  sensor1 = pulseIn(3,HIGH);
+  long cm = sensor1/10;
+  inches = cm/2.54;
+  distance = cm;
 }
 
 // Determines the max and min error boundary based on distance
 void calculate_boundary(){
-  // TODO: Implement this function properly
-  max_boundary = 3;
-  min_boundary = 1;
+  double temp_dist = distance/sqrt(2);
+  if(temp_dist + 1 > distance){
+    min_boundary = 1;
+  } else {
+    min_boundary = distance - temp_dist;
+  }
+  max_boundary = distance + temp_dist;
 }
 
 void calculate_runtime() {
-  // TODO: Implement this function properly
-  runtime = 3;
+  int base_dist = 1;
+  int base_intensity = 300;
+  int new_intensity = distance/base_dist;
+  runtime = 5/new_intensity;
 }
 
 // Checks for validity of distance
