@@ -358,6 +358,7 @@ class Control extends React.Component {
                                 {this.state.status}
                             </Text>
                         </View>
+                        {/* TODO: IMPLEMENT BAR DISPLAY */}
                         <View style={styles.timebox}>
                             <Text
                                 style={styles.timeboxText}>
