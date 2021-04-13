@@ -14,11 +14,15 @@ int percent;
 const double max_start_distance = 10;
 const double min_start_distance = 1;
 
+#define echoPin 2 // Echo of HC-SR04
+#define trigPin 3 // Trig of HC-SR04
 
 void setup() {
  Serial.begin(9600);
  pinMode(13,OUTPUT);
  pinMode(3,INPUT);
+ pinMode(trigPin, OUTPUT);
+ pinMode(echoPin, INPUT);
 }
 
 // Device waits in idle until start cycle has been received
@@ -105,10 +109,21 @@ void run_cycle() {
 
 // Gets distance from proximity sensor
 void calculate_distance() {
-  sensor1 = pulseIn(3,HIGH);
-  long cm = sensor1/10;
-  inches = cm/2.54;
-  distance = cm;
+//   sensor1 = pulseIn(3,HIGH);
+//   long cm = sensor1/10;
+//   inches = cm/2.54;
+//   distance = cm;
+  // Clears the trigPin condition
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(echoPin, HIGH);
+  // Calculating the distance
+  distance = (duration-10) * 0.034 / 2; // Speed of sound wave divided by 2 (go and back) minus the 10 microsecond delay at the start
 }
 
 // Determines the max and min error boundary based on distance
