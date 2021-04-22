@@ -38,11 +38,12 @@ void loop() {
     if(inputByte=='S'){
       run_cycle(); 
     }
-    Serial.print("distance: ");
-    char dist[16];
-    itoa(distance, dist, 10);
-    Serial.println(dist);
   }
+  //calculate_distance();
+  //Serial.print("distance: ");
+  //char dist[16];
+  //itoa(distance, dist, 10);
+  //Serial.println(dist);
 }
 
 // Method to start one cleaning cycle
@@ -57,7 +58,7 @@ void run_cycle() {
   // Potentiometer Voltage
   float potVoltage;
   // Set Voltage to 5.0 volts -> DIGIPOT_MAX_AMOUNT = 99
-  pot.set(99);
+  pot.set(35);
   
   Serial.println("isRunning: true");
   Serial.print("runtime:");
@@ -78,8 +79,7 @@ void run_cycle() {
   while(runtime > 0){
     calculate_distance();
     check_distance();
-    
-	// TODO call calculate percent and send to app
+    calculate_percent();
 	
     delay(100);
     runtime = runtime - .1;
@@ -93,6 +93,10 @@ void run_cycle() {
     dist[16];
     itoa(distance, dist, 10);
     Serial.println(dist);
+    Serial.print("percent: ");
+    char per[15];
+    itoa(percent, per, 10);
+    Serial.println(per);
 
     while(Serial.available()>0){
       inputByte = Serial.read();
@@ -175,6 +179,7 @@ void calculate_runtime() {
 // Checks for validity of distance
 void check_distance(){
   if(distance > max_start_distance || distance < min_start_distance){
+    Serial.println("isRunning: false");
     if(distance > max_start_distance){
       Serial.println("status: startingtoofar");
     } else {
@@ -191,6 +196,7 @@ void check_distance(){
     loop();
   } else if (is_running == true) {
     if(distance > max_boundary || distance < min_boundary){
+      Serial.println("isRunning: false");
       if(distance > max_boundary){
         Serial.println("status: runningtoofar");
       } else {

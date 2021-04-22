@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Button, TouchableOpacity, TouchableHighlight } from 'react-native';
 import BluetoothSerial from 'react-native-bluetooth-serial';
+import { block } from "react-native-reanimated";
 
 const DeviceList = ({ devices, connectedId, showConnectedIcon, onDevicePress }) =>
     <View>
@@ -47,7 +48,10 @@ class Control extends React.Component {
             isRunning: false,
             runtime: 0,
             distance: 0,
-            status: "Not Running"
+            status: "Not Running",
+            percent: 50,
+            barLeftMargin: 0,
+            barRightMargin: 0,
         };
     }
 
@@ -104,6 +108,7 @@ class Control extends React.Component {
                             distance: info[1].split("\n")
                         })
                     } else if (info[0] === "status:"){
+                        //TODO fix status
                         var eStatus = "";
                         if(info[1].includes("startingtoofar")){
                             eStatus = "Can't start cycle, device too far";
@@ -117,6 +122,25 @@ class Control extends React.Component {
                         this.setState({
                             status: eStatus
                         })
+                    } else if (info[0] === "percent:"){
+                        this.setState({
+                            percent: info[1].split("\n")
+                        })
+                        if(parseInt(this.state.percent) >= 50){
+                            var leftValue = (parseInt(this.state.percent) - 50) * 4;
+                            this.setState({
+                                barLeftMargin: leftValue,
+                                barRightMargin: 0
+                            })
+                        } else {
+                            var rightValue = (50 - parseInt(this.state.percent)) * 4;
+                            this.setState({
+                                barLeftMargin: 0,
+                                barRightMargin: rightValue
+                            })
+                        }
+                        console.log("barMarginRight: " + this.state.barRightMargin);
+                        console.log("barMarginLeft " + this.state.barLeftMargin);
                     }
                 }
                 
@@ -360,9 +384,10 @@ class Control extends React.Component {
                         </View>
                         {/* TODO: IMPLEMENT BAR DISPLAY */}
                         <View style={styles.timebox}>
-                            <Text
-                                style={styles.timeboxText}>
-                                bar here
+                            {/* <Text style={styles.barDisplay}> */}
+                            <Text style={{color: 'white', fontSize: 100, marginBottom: 4, marginLeft: this.state.barLeftMargin, marginRight: this.state.barRightMargin}}>
+                                {/* {this.state.percent}% */}
+                                l
                             </Text>
                         </View>
                         {/* <View style={styles.timebox}>
@@ -438,6 +463,18 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
+    },
+    barDisplay: {
+        // fontFamily: 'Roboto',
+        // display: 'inline',
+        // textAlign: 'left',
+        color: 'white',
+        // alignItems: 'start',
+        fontSize: 100,
+        marginBottom: 4,
+        // marginLeft: this.state.barLeftMargin,
+        // marginRight: this.state.barRightMargin
+        // fontWeight: 'bold',
     },
     listContainer: {
         borderColor: '#ccc',
