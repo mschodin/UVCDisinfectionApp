@@ -14,12 +14,12 @@ long sensor1, inches;
 int percent;
 
 // Constant variables
-const double max_start_distance = 10;
+const double max_start_distance = 100;
 const double min_start_distance = 1;
 
 #define echoPin 2 // Echo of HC-SR04
 #define trigPin 3 // Trig of HC-SR04
-#define ledDriverPin A2 // SDN of ATLS1A103
+//#define ledDriverPin A2 // SDN of ATLS1A103
 
 DigiPot	pot(6,7,8);
 
@@ -62,7 +62,7 @@ void run_cycle() {
   Serial.println(rtime);
   Serial.print("distance: ");
   char dist[16];
-  itoa(runtime, dist, 10);
+  itoa(distance, dist, 10);
   Serial.println(dist);
   is_running = true;
 
@@ -87,7 +87,7 @@ void run_cycle() {
     Serial.println(rtime);
     Serial.print("distance: ");
     dist[16];
-    itoa(runtime, dist, 10);
+    itoa(distance, dist, 10);
     Serial.println(dist);
 
     while(Serial.available()>0){
@@ -136,7 +136,7 @@ void calculate_distance() {
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
   // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin, HIGH);
+  double duration = pulseIn(echoPin, HIGH);
   // Calculating the distance
   distance = (duration-10) * 0.034 / 2; // Speed of sound wave divided by 2 (go and back) minus the 10 microsecond delay at the start
 }
@@ -159,14 +159,15 @@ void calculate_percent() {
 }
 
 void calculate_runtime() {
-  int base_dist = 1;
-  int base_intensity = 300;
-  int new_intensity = distance/base_dist;
+  double base_dist = 1;
+  double base_intensity = 300;
+  double new_intensity = distance/base_dist;
   runtime = 5/new_intensity;
+  runtime += 10;
   // TODO: remove this once distance and runtime are working properly
-  if(runtime <= 0){
-    runtime = 3;
-  }
+  //if(runtime <= 0){
+  //  runtime = 3;
+  //}
 }
 
 // Checks for validity of distance
