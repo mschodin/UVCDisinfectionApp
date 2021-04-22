@@ -73,8 +73,6 @@ void run_cycle() {
     // TODO: change runtime to double and count down by 1/10 second
     
     calculate_distance();
-
-    // TODO: Comment this back in once it is working
     check_distance();
     
 	// TODO call calculate percent and send to app
@@ -164,10 +162,6 @@ void calculate_runtime() {
   double new_intensity = distance/base_dist;
   runtime = 5/new_intensity;
   runtime += 10;
-  // TODO: remove this once distance and runtime are working properly
-  //if(runtime <= 0){
-  //  runtime = 3;
-  //}
 }
 
 // Checks for validity of distance
