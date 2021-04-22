@@ -348,7 +348,7 @@ class Control extends React.Component {
                         </View>
                         <View style={styles.timebox}>
                             <Text
-                                style={styles.timeboxText}>
+                                style={styles.distanceText}>
                                 {this.state.distance} cm
                             </Text>
                         </View>
@@ -422,6 +422,12 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     timeboxText: {
+        // fontFamily: 'Roboto',
+        color: 'white',
+        fontSize: 30,
+        fontWeight: 'bold',
+    },
+    distanceText: {
         // fontFamily: 'Roboto',
         color: 'white',
         fontSize: 40,

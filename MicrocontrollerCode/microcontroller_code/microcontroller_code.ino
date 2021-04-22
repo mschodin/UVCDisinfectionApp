@@ -8,7 +8,7 @@ char inputByte;
 double distance = 0.0;
 double max_boundary = 0.0;
 double min_boundary = 0.0;
-int runtime = 0;
+double runtime = 0;
 bool is_running = false;
 long sensor1, inches;
 int percent;
@@ -38,6 +38,10 @@ void loop() {
     if(inputByte=='S'){
       run_cycle(); 
     }
+    Serial.print("distance: ");
+    char dist[16];
+    itoa(distance, dist, 10);
+    Serial.println(dist);
   }
 }
 
@@ -56,9 +60,11 @@ void run_cycle() {
   pot.set(99);
   
   Serial.println("isRunning: true");
-  Serial.print("runtime: ");
-  char rtime[16];
-  itoa(runtime, rtime, 10);
+  Serial.print("runtime:");
+  //char rtime[16];
+  //itoa(runtime, rtime, 10);
+  char rtime[15];
+  dtostrf(runtime,5,2,rtime);
   Serial.println(rtime);
   Serial.print("distance: ");
   char dist[16];
@@ -70,18 +76,18 @@ void run_cycle() {
   digitalWrite(13,HIGH);
 
   while(runtime > 0){
-    // TODO: change runtime to double and count down by 1/10 second
-    
     calculate_distance();
     check_distance();
     
 	// TODO call calculate percent and send to app
 	
-    delay(1000);
-    runtime = runtime - 1;
-    Serial.print("runtime: ");
-    rtime[16];
-    itoa(runtime, rtime, 10);
+    delay(100);
+    runtime = runtime - .1;
+    Serial.print("runtime:");
+    //rtime[16];
+    //itoa(runtime, rtime, 10);
+    char rtime[15];
+    dtostrf(runtime,5,2,rtime);
     Serial.println(rtime);
     Serial.print("distance: ");
     dist[16];
@@ -108,13 +114,15 @@ void run_cycle() {
   min_boundary = 0.0;
   runtime = 0;
   Serial.println("isRunning: false");
-  Serial.print("runtime: ");
-  rtime[16];
-  itoa(runtime, rtime, 10);
+  Serial.print("runtime:");
+  //rtime[16];
+  //itoa(runtime, rtime, 10);
+  rtime[15];
+  dtostrf(runtime,5,2,rtime);
   Serial.println(rtime);
   Serial.print("distance: ");
   dist[16];
-  itoa(runtime, dist, 10);
+  itoa(distance, dist, 10);
   Serial.println(dist);
   is_running = false;
   loop();
@@ -161,7 +169,7 @@ void calculate_runtime() {
   double base_intensity = 300;
   double new_intensity = distance/base_dist;
   runtime = 5/new_intensity;
-  runtime += 10;
+  runtime += 5;
 }
 
 // Checks for validity of distance
