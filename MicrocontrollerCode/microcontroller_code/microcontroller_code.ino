@@ -1,5 +1,8 @@
 // UVC Disinfection Microcontroller
 
+// Include Libraries
+#include <DigiPotX9Cxxx.h>
+
 // Declare Variables
 char inputByte;
 double distance = 0.0;
@@ -16,6 +19,9 @@ const double min_start_distance = 1;
 
 #define echoPin 2 // Echo of HC-SR04
 #define trigPin 3 // Trig of HC-SR04
+#define ledDriverPin A2 // SDN of ATLS1A103
+
+DigiPot	pot(6,7,8);
 
 void setup() {
  Serial.begin(9600);
@@ -43,6 +49,12 @@ void run_cycle() {
   calculate_runtime();
   
   // Send runtime, starting boolean, distance,
+//   analogWrite(ledDriverPin,HIGH);
+  // Potentiometer Voltage
+  float potVoltage;
+  // Set Voltage to 5.0 volts -> DIGIPOT_MAX_AMOUNT = 99
+  pot.set(99);
+  
   Serial.println("isRunning: true");
   Serial.print("runtime: ");
   char rtime[16];
@@ -63,7 +75,7 @@ void run_cycle() {
     calculate_distance();
 
     // TODO: Comment this back in once it is working
-    //check_distance();
+    check_distance();
     
 	// TODO call calculate percent and send to app
 	
@@ -88,7 +100,10 @@ void run_cycle() {
   }
 
   // TODO: Turn off LEDs, digital write 13 low is for example, this is where we implement LED driver logic
-  digitalWrite(13,LOW);
+  //digitalWrite(13,LOW);
+//   analogWrite(ledDriverPin,HIGH);
+  // Set Voltage to 0.0 volts
+  pot.set(0);
 
   distance = 0.0;
   max_boundary = 0.0;
