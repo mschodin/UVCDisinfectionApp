@@ -6,9 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/uvc-splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#9900FF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -25,8 +25,8 @@
       "package": "com.teammama.uvcappandroid",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/uvc-icon.png",
+        "backgroundColor": "#9900FF"
       }
     },
     "web": {
