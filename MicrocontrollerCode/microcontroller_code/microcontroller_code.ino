@@ -12,6 +12,7 @@ double runtime = 0;
 bool is_running = false;
 long sensor1, inches;
 int percent;
+bool canceled = false;
 
 // Constant variables
 const double max_start_distance = 100;
@@ -50,7 +51,9 @@ void loop() {
 void run_cycle() {
   calculate_distance();
   calculate_boundary();
+  Serial.println("checking distance1");
   check_distance();
+  Serial.println("Just checked1");
   calculate_runtime();
   
   // Send runtime, starting boolean, distance,
@@ -68,7 +71,7 @@ void run_cycle() {
   dtostrf(runtime,5,2,rtime);
   Serial.println(rtime);
   Serial.print("distance: ");
-  char dist[16];
+  char dist[15];
   itoa(distance, dist, 10);
   Serial.println(dist);
   is_running = true;
@@ -83,6 +86,9 @@ void run_cycle() {
 	
     delay(100);
     runtime = runtime - .1;
+    if(runtime < 0){
+      runtime = 0;
+    }
     Serial.print("runtime:");
     //rtime[16];
     //itoa(runtime, rtime, 10);
@@ -90,14 +96,14 @@ void run_cycle() {
     dtostrf(runtime,5,2,rtime);
     Serial.println(rtime);
     Serial.print("distance: ");
-    dist[16];
+    dist[15];
     itoa(distance, dist, 10);
     Serial.println(dist);
     Serial.print("percent: ");
     char per[15];
     itoa(percent, per, 10);
     Serial.println(per);
-
+   
     while(Serial.available()>0){
       inputByte = Serial.read();
       if(inputByte=='s'){
@@ -117,18 +123,24 @@ void run_cycle() {
   max_boundary = 0.0;
   min_boundary = 0.0;
   runtime = 0;
-  Serial.println("isRunning: false");
-  Serial.print("runtime:");
-  //rtime[16];
-  //itoa(runtime, rtime, 10);
-  rtime[15];
-  dtostrf(runtime,5,2,rtime);
-  Serial.println(rtime);
-  Serial.print("distance: ");
-  dist[16];
-  itoa(distance, dist, 10);
-  Serial.println(dist);
-  is_running = false;
+  if(!canceled){
+    Serial.println("isRunning: false");
+    Serial.print("runtime:");
+    //rtime[16];
+    //itoa(runtime, rtime, 10);
+    rtime[15];
+    dtostrf(runtime,5,2,rtime);
+    Serial.println(rtime);
+    Serial.print("distance: ");
+    dist[15];
+    itoa(distance, dist, 10);
+    Serial.println(dist);
+    is_running = false;
+  } else {
+    canceled = false;
+  }
+  Serial.flush();
+  delay(100);
   loop();
 }
 
@@ -185,6 +197,7 @@ void check_distance(){
     } else {
       Serial.println("status: startingtooclose");
     }
+    canceled = true;
     distance = 0.0;
     max_boundary = 0.0;
     min_boundary = 0.0;
@@ -193,6 +206,8 @@ void check_distance(){
       runtime = 0;
       is_running = false;
     }
+    Serial.flush();
+    delay(100);
     loop();
   } else if (is_running == true) {
     if(distance > max_boundary || distance < min_boundary){
@@ -202,12 +217,15 @@ void check_distance(){
       } else {
         Serial.println("status: runningtooclose");
       }
+      canceled = true;
       digitalWrite(13,LOW);
       distance = 0.0;
       max_boundary = 0.0;
       min_boundary = 0.0;
       runtime = 0;
       is_running = false;
+      Serial.flush();
+      delay(100);
       loop();
     }
   }

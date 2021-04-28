@@ -86,6 +86,7 @@ class Control extends React.Component {
             BluetoothSerial.on('read', data => {
                 if(data.data != null && data.data != " "){
                     var info = data.data.split(" ");
+                    console.log(info);
                     if(info[0] === "isRunning:"){
                         this.setState({
                             isRunning: (info[1].includes("true"))
@@ -120,7 +121,8 @@ class Control extends React.Component {
                             eStatus = "Canceled cycle, device too close";
                         }
                         this.setState({
-                            status: eStatus
+                            status: eStatus,
+                            isRunning: false
                         })
                     } else if (info[0] === "percent:"){
                         this.setState({
@@ -139,8 +141,6 @@ class Control extends React.Component {
                                 barRightMargin: rightValue
                             })
                         }
-                        console.log("barMarginRight: " + this.state.barRightMargin);
-                        console.log("barMarginLeft " + this.state.barLeftMargin);
                     }
                 }
                 
@@ -346,8 +346,14 @@ class Control extends React.Component {
     handlePress = () => {
         if (!this.state.isRunning) {
             this.write('S');
+            this.setState({
+                isRunning: true
+            })
         } else {
             this.write('s');
+            this.setState({
+                isRunning: false
+            })
         }
     }
 
