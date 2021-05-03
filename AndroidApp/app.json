@@ -2,7 +2,7 @@
   "expo": {
     "name": "UVCApp",
     "slug": "uvc-app",
-    "version": "5.0.0",
+    "version": "6.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -18,12 +18,12 @@
     ],
     "ios": {
       "bundleIdentifier": "com.teammama.uvcappios",
-      "buildNumber": "5.0.0",
+      "buildNumber": "6.0.0",
       "supportsTablet": true
     },
     "android": {
       "package": "com.teammama.uvcappandroid",
-      "versionCode": 5,
+      "versionCode": 6,
       "adaptiveIcon": {
         "foregroundImage": "./assets/uvc-icon.png",
         "backgroundColor": "#9900FF"

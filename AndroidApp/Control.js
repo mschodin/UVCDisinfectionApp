@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Button, TouchableOpacity, TouchableHighlight } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, View, TouchableOpacity, TouchableHighlight } from 'react-native';
 import BluetoothSerial from 'react-native-bluetooth-serial';
-import { block } from "react-native-reanimated";
 
 const DeviceList = ({ devices, connectedId, showConnectedIcon, onDevicePress }) =>
     <View>
@@ -388,20 +387,11 @@ class Control extends React.Component {
                                 {this.state.status}
                             </Text>
                         </View>
-                        {/* TODO: IMPLEMENT BAR DISPLAY */}
                         <View style={styles.timebox}>
-                            {/* <Text style={styles.barDisplay}> */}
                             <Text style={{color: 'white', fontSize: 100, marginBottom: 4, marginLeft: this.state.barLeftMargin, marginRight: this.state.barRightMargin}}>
-                                {/* {this.state.percent}% */}
                                 l
                             </Text>
                         </View>
-                        {/* <View style={styles.timebox}>
-                            <Text
-                                style={styles.statusText}>
-                                Status: {this.state.isConnected}
-                            </Text>
-                        </View> */}
                         <TouchableOpacity
                             style={styles.circleButton}
                             onPress={this.handlePress}
@@ -439,7 +429,6 @@ const styles = StyleSheet.create({
     buttonText: {
         color: "#000000",
         fontSize: 20,
-        // fontFamily: "Roboto",
     },
     timebox: {
         backgroundColor: "#600080",
@@ -453,41 +442,30 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     timeboxText: {
-        // fontFamily: 'Roboto',
         color: 'white',
         fontSize: 30,
         fontWeight: 'bold',
     },
     distanceText: {
-        // fontFamily: 'Roboto',
         color: 'white',
         fontSize: 40,
         fontWeight: 'bold',
     },
     statusText: {
-        // fontFamily: 'Roboto',
         color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
     },
     barDisplay: {
-        // fontFamily: 'Roboto',
-        // display: 'inline',
-        // textAlign: 'left',
         color: 'white',
-        // alignItems: 'start',
         fontSize: 100,
         marginBottom: 4,
-        // marginLeft: this.state.barLeftMargin,
-        // marginRight: this.state.barRightMargin
-        // fontWeight: 'bold',
     },
     listContainer: {
         borderColor: '#ccc',
         borderTopWidth: 0.5,
     },
     listItem: {
-        // flex: 1,
         height: 48,
         paddingHorizontal: 16,
         borderColor: '#ccc',
@@ -495,6 +473,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
 });
-
 
 export default Control;
