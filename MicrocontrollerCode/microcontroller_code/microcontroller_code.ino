@@ -20,7 +20,6 @@ const double min_start_distance = 1;
 
 #define echoPin 2 // Echo of HC-SR04
 #define trigPin 3 // Trig of HC-SR04
-//#define ledDriverPin A2 // SDN of ATLS1A103
 
 DigiPot	pot(6,7,8);
 
@@ -40,11 +39,6 @@ void loop() {
       run_cycle(); 
     }
   }
-  //calculate_distance();
-  //Serial.print("distance: ");
-  //char dist[16];
-  //itoa(distance, dist, 10);
-  //Serial.println(dist);
 }
 
 // Method to start one cleaning cycle
@@ -56,12 +50,10 @@ void run_cycle() {
   Serial.println("Just checked1");
   calculate_runtime();
   
-  // Send runtime, starting boolean, distance,
-//   analogWrite(ledDriverPin,HIGH);
   // Potentiometer Voltage
   float potVoltage;
   // Set Voltage to 5.0 volts -> DIGIPOT_MAX_AMOUNT = 99
-  pot.set(35);
+  pot.set(14);
   
   Serial.println("isRunning: true");
   Serial.print("runtime:");
@@ -76,9 +68,6 @@ void run_cycle() {
   Serial.println(dist);
   is_running = true;
 
-  // TODO: Turn on LEDs, digital write 13 high is for example, this is where we implement LED driver logic
-  digitalWrite(13,HIGH);
-
   while(runtime > 0){
     calculate_distance();
     check_distance();
@@ -90,8 +79,6 @@ void run_cycle() {
       runtime = 0;
     }
     Serial.print("runtime:");
-    //rtime[16];
-    //itoa(runtime, rtime, 10);
     char rtime[15];
     dtostrf(runtime,5,2,rtime);
     Serial.println(rtime);
@@ -113,9 +100,6 @@ void run_cycle() {
     }
   }
 
-  // TODO: Turn off LEDs, digital write 13 low is for example, this is where we implement LED driver logic
-  //digitalWrite(13,LOW);
-//   analogWrite(ledDriverPin,HIGH);
   // Set Voltage to 0.0 volts
   pot.set(0);
 
@@ -126,8 +110,6 @@ void run_cycle() {
   if(!canceled){
     Serial.println("isRunning: false");
     Serial.print("runtime:");
-    //rtime[16];
-    //itoa(runtime, rtime, 10);
     rtime[15];
     dtostrf(runtime,5,2,rtime);
     Serial.println(rtime);
@@ -146,10 +128,6 @@ void run_cycle() {
 
 // Gets distance from proximity sensor
 void calculate_distance() {
-//   sensor1 = pulseIn(3,HIGH);
-//   long cm = sensor1/10;
-//   inches = cm/2.54;
-//   distance = cm;
   // Clears the trigPin condition
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -176,7 +154,6 @@ void calculate_boundary(){
 
 // Method to show boundary as percentage
 void calculate_percent() {
-//     int base = max_boundary - min_boundary;
     percent = ((distance - min_boundary) / (max_boundary - min_boundary)) * 100;
 }
 
