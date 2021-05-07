@@ -1,16 +1,16 @@
 # UVCDisinfectionApp
 
-## To install libraries for the microcontroller.ino code
-Open `microcontroller.ino` in the Arduino IDE
-Select `Sketch` -> `Include Library` -> `Add .ZIP Library`
-Navigate to `UVCDisinfectionApp/MicrocontrollerCode/libraries`
-Select `DigiPotX9Cxxx.zip` and hit `Open`
+## To install libraries for the microcontroller.ino code:
+Open `microcontroller.ino` in the Arduino IDE  
+Select Sketch -> Include Library -> Add .ZIP Library  
+Navigate to `UVCDisinfectionApp/MicrocontrollerCode/libraries`  
+Select `DigiPotX9Cxxx.zip` and hit Open  
 
-## To download the controller app
-Note: Only available through the Google Play store
-Open the Google Play store on your Android device
-Search for "UVC Disinfection App"
-Install the purple app that is developed by Team MAMA
+## To download the controller app:
+Note: Only available through the Google Play store  
+Open the Google Play store on your Android device  
+Search for "UVC Disinfection App"  
+Install the purple app that is developed by Team MAMA  
 
 ## To install development environment follow the instructions below:
 Clone the project  
