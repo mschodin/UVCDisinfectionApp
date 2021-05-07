@@ -4,7 +4,7 @@
 Open `microcontroller.ino` in the Arduino IDE  
 Select Sketch -> Include Library -> Add .ZIP Library  
 Navigate to `UVCDisinfectionApp/MicrocontrollerCode/libraries`  
-Select `DigiPotX9Cxxx.zip` and hit Open  
+Select `DigiPotX9Cxxx.zip` and click Open  
 
 ## To download the controller app:
 Note: Only available through the Google Play store  
